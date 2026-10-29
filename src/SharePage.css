@@ -1,0 +1,102 @@
+.public-share-badge {
+  min-height: 39px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--green);
+  background: var(--white);
+  font-size: 10px;
+}
+
+.public-share-badge small {
+  padding-left: 7px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.public-share-cloud {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  color: var(--green);
+  font-size: 9px;
+}
+
+.public-share-state {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px;
+  color: var(--ink);
+  background: var(--paper);
+  text-align: center;
+}
+
+.public-share-state > span {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+  border: 1px solid var(--green);
+  border-radius: 50%;
+  color: var(--green);
+}
+
+.public-share-state h1 {
+  margin: 0;
+  font-family: "Noto Serif SC", "Songti SC", STSong, serif;
+  font-size: 27px;
+}
+
+.public-share-state p {
+  margin: 13px 0 22px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.public-share-state a {
+  padding: 11px 18px;
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.public-share-loading {
+  animation: public-cloud-pulse 1.4s ease-in-out infinite;
+}
+
+.public-share-inline-error {
+  margin: 14px 0 0;
+  padding: 11px;
+  color: #91473e;
+  background: #f3e4df;
+  font-size: 10px;
+}
+
+@keyframes public-cloud-pulse {
+  50% { opacity: 0.45; transform: translateY(-4px); }
+}
+
+@media (max-width: 560px) {
+  .public-share-badge {
+    width: 39px;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .public-share-badge span,
+  .public-share-badge small,
+  .public-share-cloud span {
+    display: none;
+  }
+}
