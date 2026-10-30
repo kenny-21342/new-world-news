@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -55,6 +55,7 @@ import {
   type TopSecretDocument,
 } from './controller'
 import CitizenStatus from './CitizenStatus'
+import { CitizenAd } from './CitizenAds'
 import CloudShareControls from './CloudShareControls'
 import { seedArchives, seedTopSecret } from './seedArchives'
 import { seedTicker, seedNewsArticles, seedSituationEvents, seedDataMetrics } from './seedContent'
@@ -736,23 +737,26 @@ export default function App() {
           {visibleArticles.length ? (
             <div className="news-grid">
               {visibleArticles.map((article, index) => (
-                <article className={`news-card ${editing ? 'editable-frame' : ''}`} key={article.id} onClick={() => openArticle(article)}>
-                  <div className="card-image-wrap">
-                    <NewsImage image={article.image} className="card-image" editable={editing} />
-                    <span className="card-index">{String(index + 1).padStart(2, '0')}</span>
-                    {article.featured && <span className="featured-badge">头条</span>}
-                  </div>
-                  <div className="card-copy">
-                    <div className="story-meta"><span>{article.category}</span><span>{formatDate(article.date)}</span></div>
-                    <h3 className={!article.title ? 'placeholder-text' : ''}>{article.title || '点击填写新闻标题'}</h3>
-                    <p className={!article.summary ? 'placeholder-text' : ''}>{article.summary || '用一两句话写下这条新闻的摘要，吸引读者继续阅读。'}</p>
-                    <div className="card-footer">
-                      <span>{article.author || '作者待填写'}</span>
-                      <button type="button" aria-label={editing ? '编辑新闻' : '阅读新闻'}>{editing ? <Edit3 size={16} /> : <ArrowRight size={17} />}</button>
+                <Fragment key={article.id}>
+                  <article className={`news-card ${editing ? 'editable-frame' : ''}`} onClick={() => openArticle(article)}>
+                    <div className="card-image-wrap">
+                      <NewsImage image={article.image} className="card-image" editable={editing} />
+                      <span className="card-index">{String(index + 1).padStart(2, '0')}</span>
+                      {article.featured && <span className="featured-badge">头条</span>}
                     </div>
-                  </div>
-                  {editing && <span className="frame-edit-badge"><Edit3 size={13} /> 点击编辑</span>}
-                </article>
+                    <div className="card-copy">
+                      <div className="story-meta"><span>{article.category}</span><span>{formatDate(article.date)}</span></div>
+                      <h3 className={!article.title ? 'placeholder-text' : ''}>{article.title || '点击填写新闻标题'}</h3>
+                      <p className={!article.summary ? 'placeholder-text' : ''}>{article.summary || '用一两句话写下这条新闻的摘要，吸引读者继续阅读。'}</p>
+                      <div className="card-footer">
+                        <span>{article.author || '作者待填写'}</span>
+                        <button type="button" aria-label={editing ? '编辑新闻' : '阅读新闻'}>{editing ? <Edit3 size={16} /> : <ArrowRight size={17} />}</button>
+                      </div>
+                    </div>
+                    {editing && <span className="frame-edit-badge"><Edit3 size={13} /> 点击编辑</span>}
+                  </article>
+                  {!editing && [2, 5, 9, 13].includes(index) && <CitizenAd slot={[2, 5, 9, 13].indexOf(index)} />}
+                </Fragment>
               ))}
               {editing && (
                 <button type="button" className="empty-add-card" onClick={addArticle}>

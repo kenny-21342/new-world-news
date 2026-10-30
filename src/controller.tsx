@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { SecretArchive } from './access'
+import { PersonnelRegistry } from './personnel'
 import './controller.css'
 
 const stabilityTrend = [
@@ -132,9 +133,12 @@ export function ControllerDashboard({
       <nav className="controller-anchor-nav" aria-label="档案页面导航">
         <button type="button" onClick={() => document.getElementById('situation-changes')?.scrollIntoView({ behavior: 'smooth' })}>近期形势变化</button>
         <button type="button" onClick={() => document.getElementById('data-changes')?.scrollIntoView({ behavior: 'smooth' })}>数据变动</button>
+        <button type="button" onClick={() => document.getElementById('personnel-registry')?.scrollIntoView({ behavior: 'smooth' })}>人事档案</button>
         <button type="button" onClick={() => document.getElementById('past-archives')?.scrollIntoView({ behavior: 'smooth' })}>往期档案</button>
         <button type="button" className="secret-anchor" onClick={onOpenTopSecret}><LockKeyhole size={13} /> 绝密文档</button>
       </nav>
+
+      <PersonnelRegistry />
 
       <section className="intelligence-section" id="data-changes">
         <div className="intelligence-heading"><div><span>DATA MOVEMENT / 01</span><h2>数据变动</h2></div><BarChart3 size={23} /></div>
