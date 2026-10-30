@@ -1,3 +1,4 @@
+.ad-product{width:min(38%,340px);height:210px;position:relative;flex:none;transform:rotate(1.5deg);box-shadow:0 16px 30px rgba(0,0,0,.2);background:#eee}.ad-product img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.82) contrast(1.03)}.ad-product span{position:absolute;left:0;bottom:0;padding:6px 10px;background:rgba(20,30,25,.82);color:#fff;font-size:8px;letter-spacing:.1em}.ad-watch{color:#eee8dc;background:linear-gradient(120deg,#40392f,#75654c)}.ad-shoes{color:#f0e9e5;background:linear-gradient(120deg,#5a302d,#915149)}
 .citizen-ad {
   position: relative;
   grid-column: 1 / -1;
