@@ -55,6 +55,7 @@ import {
   type TopSecretDocument,
 } from './controller'
 import CitizenStatus from './CitizenStatus'
+import { CasteSelector, casteInfo, type Caste } from './CasteSelector'
 import { CitizenAd } from './CitizenAds'
 import CloudShareControls from './CloudShareControls'
 import { seedArchives, seedTopSecret } from './seedArchives'
@@ -181,6 +182,13 @@ function formatDate(date: string) {
   return `${year}.${month}.${day}`
 }
 
+function allocateArticle(article: Article, caste: Caste, isCitizen: boolean): Article {
+  if (!isCitizen || caste === 'alpha' || caste === 'beta') return article
+  if (caste === 'gamma') return { ...article, summary: article.summary.split(/[。！？]/)[0] + '。相关活动与消费积分已按您的岗位配给。' }
+  if (caste === 'delta') return { ...article, summary: '请留意所在编组的班次、交通与配给通知，按时参加集体活动。', body: `${article.title}\n\n本通告已按德尔塔岗位需要简化。请服从编组安排，保持生产节奏，下班后按时领取唆麻。` }
+  return { ...article, title: article.category === '科技' ? '生产设备运行正常' : article.category === '文化' ? '统一娱乐准时开放' : '今日公共生活通知', summary: '工作时间不变。下班后请按时领取唆麻。', body: '工作时间不变。\n\n请参加统一娱乐，保持微笑。\n\n下班后请按时领取唆麻。' }
+}
+
 function NewsImage({
   image,
   className = '',
@@ -254,6 +262,7 @@ export default function App() {
   const [editing, setEditing] = useState(role === 'editor')
   const [loginOpen, setLoginOpen] = useState(false)
   const [dark, setDark] = useState(false)
+  const [caste, setCaste] = useState<Caste>('beta')
   const [category, setCategory] = useState('全部')
   const [query, setQuery] = useState('')
   const [searchOpen, setSearchOpen] = useState(false)
@@ -284,20 +293,23 @@ export default function App() {
 
   const isEditor = role === 'editor'
   const canSeeArchives = role !== 'citizen'
-  const featured = data.articles.find((article) => article.featured) || data.articles[0]
-  const readerArticle = data.articles.find((article) => article.id === readerId)
+  const citizenArticles = useMemo(() => role === 'citizen' ? data.articles.slice(0, casteInfo[caste].count) : data.articles, [data.articles, role, caste])
+  const featuredSource = citizenArticles.find((article) => article.featured) || citizenArticles[0]
+  const featured = featuredSource ? allocateArticle(featuredSource, caste, role === 'citizen') : undefined
+  const readerSource = citizenArticles.find((article) => article.id === readerId)
+  const readerArticle = readerSource ? allocateArticle(readerSource, caste, role === 'citizen') : undefined
   const readerArchive = canSeeArchives ? data.archives.find((archive) => archive.id === archiveReaderId) : undefined
   const hasFilter = category !== '全部' || query.trim().length > 0
 
   const visibleArticles = useMemo(() => {
     const keyword = query.trim().toLowerCase()
-    return data.articles.filter((article) => {
+    return citizenArticles.filter((article) => {
       const categoryMatch = category === '全部' || article.category === category
       const searchMatch = !keyword || `${article.title} ${article.summary} ${article.author}`.toLowerCase().includes(keyword)
       const featureMatch = hasFilter || article.id !== featured?.id
       return categoryMatch && searchMatch && featureMatch
-    })
-  }, [data.articles, category, query, hasFilter, featured?.id])
+    }).map((article) => allocateArticle(article, caste, role === 'citizen'))
+  }, [citizenArticles, category, query, hasFilter, featured?.id, caste, role])
 
   const modalOpen = Boolean(draft || archiveDraft || intelligenceDraft || topSecretDraft || secretLockOpen || secretReaderOpen || settingsOpen || readerArticle || readerArchive || loginOpen)
 
@@ -641,7 +653,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="page-width main-content">
+      <main className={`page-width main-content ${role === 'citizen' ? `caste-${caste}` : ''}`}>
         <section className="edition-bar">
           <div>
             <span className="section-kicker">{role === 'controller' ? 'WORLD STATE CENTRAL ARCHIVE' : 'YOUR INDEPENDENT NEWSROOM'}</span>
@@ -669,7 +681,7 @@ export default function App() {
           </div>
         </section>
 
-        {role === 'citizen' && <CitizenStatus />}
+        {role === 'citizen' && <><CitizenStatus /><CasteSelector caste={caste} onChange={(next) => { setCaste(next); setCategory('全部'); setReaderId(null) }} /></>}
 
         {isEditor && editing && (
           <div className="edit-notice"><Sparkles size={17} /><span><strong>编辑者权限已开启。</strong> 点击任意新闻框架填写内容；向下可管理真实档案。</span><button type="button" onClick={() => setEditing(false)}>预览编辑结果 <ArrowRight size={15} /></button></div>
@@ -699,10 +711,10 @@ export default function App() {
             <aside className="news-wire">
               <div className="wire-heading">
                 <div><span className="section-kicker">LATEST DISPATCHES</span><h2>新闻速报</h2></div>
-                <span className="wire-count">{String(Math.max(data.articles.length - 1, 0)).padStart(2, '0')}</span>
+                <span className="wire-count">{String(Math.max(citizenArticles.length - 1, 0)).padStart(2, '0')}</span>
               </div>
               <div className="wire-list">
-                {data.articles.filter((article) => article.id !== featured.id).slice(0, 4).map((article, index) => (
+                {citizenArticles.filter((article) => article.id !== featured.id).slice(0, 4).map((article, index) => (
                   <button type="button" className="wire-item" key={article.id} onClick={() => openArticle(article)}>
                     <span className="wire-number">{String(index + 1).padStart(2, '0')}</span>
                     <span className="wire-copy">
@@ -756,6 +768,7 @@ export default function App() {
                     {editing && <span className="frame-edit-badge"><Edit3 size={13} /> 点击编辑</span>}
                   </article>
                   {!editing && [1, 3, 6, 9, 12, 15].includes(index) && <CitizenAd slot={[1, 3, 6, 9, 12, 15].indexOf(index)} />}
+                  {!editing && role === 'citizen' && (caste === 'delta' || caste === 'epsilon') && index === 0 && <CitizenAd slot={caste === 'delta' ? 4 : 0} />}
                 </Fragment>
               ))}
               {editing && (
