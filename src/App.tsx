@@ -767,7 +767,7 @@ export default function App() {
                     </div>
                     {editing && <span className="frame-edit-badge"><Edit3 size={13} /> 点击编辑</span>}
                   </article>
-                  {!editing && [1, 3, 6, 9, 12, 15].includes(index) && <CitizenAd slot={[1, 3, 6, 9, 12, 15].indexOf(index)} />}
+                  {!editing && [0, 2, 4, 6, 8, 10, 12, 15].includes(index) && <CitizenAd slot={[0, 2, 4, 6, 8, 10, 12, 15].indexOf(index)} />}
                   {!editing && role === 'citizen' && (caste === 'delta' || caste === 'epsilon') && index === 0 && <CitizenAd slot={caste === 'delta' ? 4 : 0} />}
                 </Fragment>
               ))}
