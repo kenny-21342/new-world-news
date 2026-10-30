@@ -49,6 +49,30 @@ const profiles: Profile[] = [
     assessment: '评估结论：航线与隔离体系运行正常。其私人日志中出现岛民也有稳定一词，相关页已移送语言审查。',
   },
   {
+    id: 'tagore', name: '阿育王·泰戈尔', code: 'WS-C-SA-006', region: '南亚区', post: '第 6 任南亚主宰者', caste: 'Alpha-Plus / 特别任命', status: '现任', access: 'high', summary: '主管人口配额、药物配给与公共医疗叙事。掌握中央药物储备的真实消耗表。',
+    background: 'A.F. 583 年出瓶于新德里中央孵化体系，原任配给委员会人口模型主管。其主持的双轨库存制度将公共配给稳定维持在满额记录，同时将短缺转入未登记病区。公开履历称其为消灭排队与匮乏的行政典范。',
+    record: 'A.F. 620 年接任南亚区。现主持 WS-083 双重库存审计，并复核备用公民病区与高龄人口静默转移。每月与蒙德交换未经修正的配给数据。',
+    assessment: '评估结论：危机处置能力可靠。风险点为同情性超额配给；最近三次超额均发生于拒绝登记亲属关系的病区。',
+  },
+  {
+    id: 'mandela', name: '曼德拉·恩克鲁玛', code: 'WS-C-AF-004', region: '非洲区', post: '第 4 任非洲主宰者', caste: 'Alpha-Plus / 特别任命', status: '现任', access: 'high', summary: '主管劳动调度、公共频道与社区认同课程。负责跨区劳动冲突的非公开处置。',
+    background: 'A.F. 576 年出瓶于开普敦行政中心，历任劳动编组督导、社区合唱课程审查员及公共频道主任。擅长将个体申诉转写为编组适应问题，并以调岗、休假和延长娱乐时段消解组织性集会。',
+    record: 'A.F. 618 年接任非洲区。现监管 WS-084 编组忠诚复核与原始集会录音库。灯塔事件后，向十大区下发未经公开的情感隔离指南。',
+    assessment: '评估结论：群众调度能力优秀。其讲话稿中反复出现不应被记录的旧词尊严，语言局已安排季度复训。',
+  },
+  {
+    id: 'saladin', name: '萨拉丁·罗斯柴尔德', code: 'WS-C-ME-005', region: '中东区', post: '第 5 任中东主宰者', caste: 'Alpha / 特别任命', status: '现任', access: 'high', summary: '主管能源、洲际物流与关键设施静默管理。掌握备用电网和秘密运输通道。',
+    background: 'A.F. 588 年出瓶，原为洲际能源交换中心调度官。曾设计关键设施双账簿系统，使公共能源报表不受秘密实验室与封存库耗电影响。其方案被中央会计局列为永久标准。',
+    record: 'A.F. 623 年接任中东区。主持 WS-085 能源影子账簿和紧急运输通道。现负责向日内瓦预案设施提供不可追踪的供电与通信。',
+    assessment: '评估结论：后勤保障能力无可替代。个人通信中存在三次无授权的旧宗教词汇检索，已按工作需要归档。',
+  },
+  {
+    id: 'bolivar', name: '玻利瓦尔·聂鲁达', code: 'WS-C-LA-004', region: '南美区', post: '第 4 任南美主宰者', caste: 'Alpha-Plus / 特别任命', status: '现任', access: 'high', summary: '主管感官产业、异常艺术审查与外岛候选人筛选。负责识别具有孤立倾向的 Alpha 个体。',
+    background: 'A.F. 590 年出瓶于圣保罗文化生产中心，原任感官影片节奏设计师。因发现观众对悲剧结局的异常共情而转向内容审查。其制定的情绪曲线标准可使悲伤在九秒内转化为消费欲望。',
+    record: 'A.F. 622 年接任南美区。现执行 WS-086 异常艺术样本回收和外岛候选人画像。每周向蒙德提交未经娱乐化处理的私人诗作清单。',
+    assessment: '评估结论：审查敏锐度极高。长期接触违禁文本可能形成职业性理解，不得单独保管完整副本。',
+  },
+  {
     id: 'ward', name: '赫莲娜·沃德', code: 'WS-R-EU-019', region: '西欧区', post: '主宰者备选人 / 孵化系统代表', caste: 'Alpha-Plus', status: '候选公示', access: 'candidate', summary: '伦敦中央孵化中心主任。候选人档案依世界国任职公示条例开放查阅。',
     background: 'A.F. 596 年出瓶，历任胚胎质量审核员、条件设置讲师及孵化中心副主任。主张将高风险神经特征解释为可调配差异，而非缺陷。其管理的第 19 号模型显著降低关键岗位离职率。',
     record: '候选任期考核三年，已完成两年。现需补充公共沟通评估，并解释 WS-081 模型中 Alpha 降级误差。',
@@ -109,7 +133,7 @@ export function PersonnelRegistry() {
             <section><span>履历背景 / BACKGROUND</span><p>{selected.background}</p></section>
             <section><span>任职记录 / APPOINTMENT</span><p>{selected.record}</p></section>
             <section><span>组织评估 / ASSESSMENT</span><p>{selected.assessment}</p></section>
-            <footer>世界国中央人事局 · 公文档案 · 禁止向普通公民公开</footer>
+            <footer>世界国中央人事局 · 公文档案 · 禁止向公共信息层级公开</footer>
           </div> : <form className="personnel-lock" onSubmit={verify}>
             <FileKey2 size={30} /><h3>高官详细档案需要二级授权</h3><p>基础信息已展示。输入二级密码后方可查阅完整履历、任职记录与组织评估。</p>
             <label><span>二级档案密码</span><div><KeyRound size={15} /><input autoFocus type="password" value={password} onChange={(event) => { setPassword(event.target.value); setError('') }} placeholder="输入 6 位密码" /></div></label>

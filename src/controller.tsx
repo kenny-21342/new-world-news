@@ -22,6 +22,7 @@ import {
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { SecretArchive } from './access'
 import { PersonnelRegistry } from './personnel'
+import { MondOffice } from './MondOffice'
 import './controller.css'
 
 const stabilityTrend = [
@@ -131,6 +132,7 @@ export function ControllerDashboard({
       </section>
 
       <nav className="controller-anchor-nav" aria-label="档案页面导航">
+        <button type="button" onClick={() => document.getElementById('mond-office')?.scrollIntoView({ behavior: 'smooth' })}>蒙德办公室</button>
         <button type="button" onClick={() => document.getElementById('situation-changes')?.scrollIntoView({ behavior: 'smooth' })}>近期形势变化</button>
         <button type="button" onClick={() => document.getElementById('data-changes')?.scrollIntoView({ behavior: 'smooth' })}>数据变动</button>
         <button type="button" onClick={() => document.getElementById('personnel-registry')?.scrollIntoView({ behavior: 'smooth' })}>人事档案</button>
@@ -138,6 +140,7 @@ export function ControllerDashboard({
         <button type="button" className="secret-anchor" onClick={onOpenTopSecret}><LockKeyhole size={13} /> 绝密文档</button>
       </nav>
 
+      <MondOffice />
       <PersonnelRegistry />
 
       <section className="intelligence-section" id="data-changes">

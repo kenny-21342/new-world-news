@@ -219,8 +219,8 @@ function NewsImage({
           <span className="placeholder-corner corner-a" />
           <span className="placeholder-corner corner-b" />
           <ImagePlus size={30} strokeWidth={1.4} />
-          <strong>{editable ? '添加你的新闻图片' : '图片留白'}</strong>
-          <small>建议横向构图 · 可自由调整</small>
+          <strong>{editable ? '添加核准新闻图片' : '图像待核准'}</strong>
+          <small>公共影像处 · 标准横向制式</small>
         </div>
       )}
     </div>
@@ -716,7 +716,7 @@ export default function App() {
               {isEditor && <button type="button" className="wire-add" onClick={addArticle}><Plus size={16} /> 添加一条新闻</button>}
               <div className="wire-note">
                 <Clock3 size={18} />
-                <div><strong>{isEditor ? '你的报纸，由你定义' : '世界国公共新闻服务'}</strong><p>{isEditor ? '文字与图片只保存在当前浏览器，不会上传。' : '当前为世界公民公开浏览界面。'}</p></div>
+                <div><strong>{isEditor ? '中央新闻内容维护' : '世界国公共新闻服务'}</strong><p>{isEditor ? '授权文稿保存于本机内网终端，请定期归档备份。' : '当前为世界公民公共信息层级。'}</p></div>
               </div>
             </aside>
           </section>
@@ -782,8 +782,8 @@ export default function App() {
 
         <section className="manifesto-banner">
           <span className="manifesto-symbol">“</span>
-          <div><span className="section-kicker">A SPACE FOR YOUR IDEAS</span><h2>{isEditor ? '每一块留白，都在等待一个观点。' : '今日的新闻，明日的幸福。'}</h2></div>
-          {isEditor && <button type="button" onClick={addArticle}>开始创作 <ArrowRight size={18} /></button>}
+          <div><span className="section-kicker">COMMUNITY · IDENTITY · STABILITY</span><h2>{isEditor ? '每一条核准的信息，都在维护共同的幸福。' : '今日的新闻，明日的幸福。'}</h2></div>
+          {isEditor && <button type="button" onClick={addArticle}>拟写公共通告 <ArrowRight size={18} /></button>}
         </section>
           </>
         )}
@@ -792,7 +792,7 @@ export default function App() {
       <footer className="site-footer">
         <div className="page-width footer-inner">
           <div className="footer-brand"><Newspaper size={25} /><strong>{data.siteName}</strong><span>© 新世界新闻编辑部</span></div>
-          <p>为《美丽新世界》创意作业而设 · 所有新闻内容均由你创作</p>
+          <p>世界国中央新闻总署核准 · 共同体、身份、稳定</p>
           <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>回到顶部 <ArrowUpFromLine size={15} /></button>
         </div>
       </footer>

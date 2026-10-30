@@ -18,7 +18,7 @@ function PublicImage({ image, className = '' }: { image: SharedImage; className?
       {image.src ? (
         <img src={image.src} alt="新闻封面" draggable={false} style={{ transform: `translate(${image.x}%, ${image.y}%) scale(${image.zoom})`, filter: `brightness(${image.brightness}%) grayscale(${image.grayscale}%)` }} />
       ) : (
-        <div className="image-placeholder"><span className="placeholder-corner corner-a" /><span className="placeholder-corner corner-b" /><ImagePlus size={30} strokeWidth={1.4} /><strong>图片留白</strong><small>公开新闻分享</small></div>
+        <div className="image-placeholder"><span className="placeholder-corner corner-a" /><span className="placeholder-corner corner-b" /><ImagePlus size={30} strokeWidth={1.4} /><strong>图像待核准</strong><small>世界国公共新闻频道</small></div>
       )}
     </div>
   )

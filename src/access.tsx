@@ -114,7 +114,7 @@ export function LoginModal({
               <ArrowRight size={17} />
             </button>
           </form>
-          <p className="login-footnote"><LockKeyhole size={12} /> 本登录用于创意作业中的前端角色演示</p>
+          <p className="login-footnote"><LockKeyhole size={12} /> 身份核验记录将依世界国内网条例封存</p>
         </div>
       </section>
     </div>
@@ -149,7 +149,7 @@ export function ArchiveSection({
             <span className="archive-card-bottom"><small>{archive.status}</small>{canEdit ? <Edit3 size={15} /> : <ArrowRight size={15} />}</span>
           </button>
         ))}
-        {canEdit && <button type="button" className="archive-add-card" onClick={onAdd}><Plus size={23} /><strong>建立真实档案</strong><small>普通公民不会看到此内容</small></button>}
+        {canEdit && <button type="button" className="archive-add-card" onClick={onAdd}><Plus size={23} /><strong>建立真实档案</strong><small>公共信息层级不会显示此内容</small></button>}
       </div>
     </section>
   )
