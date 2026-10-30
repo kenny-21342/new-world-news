@@ -132,7 +132,7 @@ export function ControllerDashboard({
       </section>
 
       <nav className="controller-anchor-nav" aria-label="档案页面导航">
-        <button type="button" onClick={() => document.getElementById('mond-office')?.scrollIntoView({ behavior: 'smooth' })}>蒙德办公室</button>
+        <button type="button" onClick={() => document.getElementById('mond-office')?.scrollIntoView({ behavior: 'smooth' })}>穆斯塔法·蒙德</button>
         <button type="button" onClick={() => document.getElementById('situation-changes')?.scrollIntoView({ behavior: 'smooth' })}>近期形势变化</button>
         <button type="button" onClick={() => document.getElementById('data-changes')?.scrollIntoView({ behavior: 'smooth' })}>数据变动</button>
         <button type="button" onClick={() => document.getElementById('personnel-registry')?.scrollIntoView({ behavior: 'smooth' })}>人事档案</button>
