@@ -19,8 +19,26 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { SecretArchive } from './access'
 import './controller.css'
+
+const stabilityTrend = [
+  { week: '第 1 周', happiness: 100, soma: 5.1, anomalies: 41 },
+  { week: '第 2 周', happiness: 99.8, soma: 5.4, anomalies: 73 },
+  { week: '第 3 周', happiness: 99.5, soma: 5.9, anomalies: 126 },
+  { week: '第 4 周', happiness: 99.1, soma: 6.3, anomalies: 288 },
+  { week: '第 5 周', happiness: 98.4, soma: 6.8, anomalies: 614 },
+  { week: '本周', happiness: 97.6, soma: 7.2, anomalies: 1284 },
+]
+
+const anomalyTypes = [
+  { name: '拒绝唆麻', value: 386, color: '#8f3f35' },
+  { name: '自发独处', value: 342, color: '#b17b45' },
+  { name: '追问旧词', value: 297, color: '#426c60' },
+  { name: '手抄文本', value: 159, color: '#6e5b78' },
+  { name: '其他异常', value: 100, color: '#7a8179' },
+]
 
 export type SituationEvent = {
   id: string
@@ -129,6 +147,42 @@ export function ControllerDashboard({
               <div><span className={!metric.delta ? 'placeholder-text' : ''}>{metric.delta || '变动待录入'}</span><small>{metric.note || '暂无补充说明'}</small></div>
             </article>
           ))}
+        </div>
+        <div className="intelligence-chart-grid">
+          <article className="intelligence-chart-card">
+            <div className="chart-card-heading"><div><span>STABILITY TREND / 6 WEEKS</span><h3>快乐指数与异常行为趋势</h3></div><small>内部监测</small></div>
+            <div className="chart-legend"><span><i className="legend-happiness" />快乐指数（%）</span><span><i className="legend-anomaly" />异常行为（例）</span></div>
+            <div className="intelligence-chart" aria-label="六周快乐指数与异常行为趋势图">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={stabilityTrend} margin={{ top: 12, right: 4, left: -18, bottom: 0 }}>
+                  <defs><linearGradient id="happinessFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#315f50" stopOpacity={0.3} /><stop offset="100%" stopColor="#315f50" stopOpacity={0.02} /></linearGradient></defs>
+                  <CartesianGrid stroke="#dedbd1" strokeDasharray="3 4" vertical={false} />
+                  <XAxis dataKey="week" tick={{ fill: '#77776e', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis yAxisId="happiness" domain={[96, 101]} tick={{ fill: '#315f50', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis yAxisId="anomaly" orientation="right" tick={{ fill: '#984f43', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ background: '#f7f4ec', border: '1px solid #cfc9bb', borderRadius: 0, fontSize: 12 }} />
+                  <Area yAxisId="happiness" type="monotone" dataKey="happiness" name="快乐指数（%）" stroke="#315f50" fill="url(#happinessFill)" strokeWidth={2.2} />
+                  <Area yAxisId="anomaly" type="monotone" dataKey="anomalies" name="异常行为（例）" stroke="#984f43" fill="#984f4312" strokeWidth={2.2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            <p>快乐指数仍接近满值，但异常行为六周增长约 31 倍；秩序稳定，风险苗头上升。</p>
+          </article>
+          <article className="intelligence-chart-card">
+            <div className="chart-card-heading"><div><span>ANOMALY TAXONOMY / 1,284</span><h3>异常行为构成</h3></div><small>本周登记</small></div>
+            <div className="intelligence-chart anomaly-bar-chart" aria-label="本周异常行为类型柱状图">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={anomalyTypes} layout="vertical" margin={{ top: 8, right: 18, left: 8, bottom: 0 }}>
+                  <CartesianGrid stroke="#dedbd1" strokeDasharray="3 4" horizontal={false} />
+                  <XAxis type="number" tick={{ fill: '#77776e', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis type="category" dataKey="name" width={70} tick={{ fill: '#42463f', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ background: '#f7f4ec', border: '1px solid #cfc9bb', borderRadius: 0, fontSize: 12 }} />
+                  <Bar dataKey="value" name="登记数量（例）" radius={[0, 2, 2, 0]}>{anomalyTypes.map((item) => <Cell key={item.name} fill={item.color} />)}</Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <p>所有类别合计 1,284 例。多数为个体行为，尚未发现统一指挥或跨区组织。</p>
+          </article>
         </div>
       </section>
 
