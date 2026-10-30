@@ -311,6 +311,14 @@ export default function App() {
     }).map((article) => allocateArticle(article, caste, role === 'citizen'))
   }, [citizenArticles, category, query, hasFilter, featured?.id, caste, role])
 
+  const adPositions: number[] = role !== 'citizen'
+    ? [0, 2, 4, 6, 8, 10, 12, 15]
+    : { epsilon: [0, 1, 2], delta: [0, 2, 4], gamma: [1, 4, 8], beta: [2, 6, 10], alpha: [4, 10, 15] }[caste]
+  const adSlotForIndex = (index: number) => {
+    const position = adPositions.indexOf(index)
+    return position >= 0 ? position : null
+  }
+
   const modalOpen = Boolean(draft || archiveDraft || intelligenceDraft || topSecretDraft || secretLockOpen || secretReaderOpen || settingsOpen || readerArticle || readerArchive || loginOpen)
 
   useEffect(() => {
@@ -767,8 +775,7 @@ export default function App() {
                     </div>
                     {editing && <span className="frame-edit-badge"><Edit3 size={13} /> 点击编辑</span>}
                   </article>
-                  {!editing && [0, 2, 4, 6, 8, 10, 12, 15].includes(index) && <CitizenAd slot={[0, 2, 4, 6, 8, 10, 12, 15].indexOf(index)} />}
-                  {!editing && role === 'citizen' && (caste === 'delta' || caste === 'epsilon') && index === 0 && <CitizenAd slot={caste === 'delta' ? 4 : 0} />}
+                  {!editing && adSlotForIndex(index) !== null && <CitizenAd slot={adSlotForIndex(index)!} />}
                 </Fragment>
               ))}
               {editing && (
