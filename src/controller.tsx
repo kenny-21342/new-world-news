@@ -118,7 +118,10 @@ export function ControllerDashboard({
   onOpenTopSecret: () => void
 }) {
   const keyword = archiveQuery.trim().toLowerCase()
-  const visibleArchives = archives.filter((archive) => !keyword || `${archive.recordNo} ${archive.title} ${archive.summary} ${archive.body} ${archive.status}`.toLowerCase().includes(keyword))
+  const archiveNumber = (archive: SecretArchive) => Number(archive.title.match(/档案\s*(\d+)/)?.[1] || archive.recordNo.match(/\d+/)?.[0] || Number.MAX_SAFE_INTEGER)
+  const visibleArchives = archives
+    .filter((archive) => !keyword || `${archive.recordNo} ${archive.title} ${archive.summary} ${archive.body} ${archive.status}`.toLowerCase().includes(keyword))
+    .sort((a, b) => archiveNumber(a) - archiveNumber(b))
 
   return (
     <div className="controller-dashboard">

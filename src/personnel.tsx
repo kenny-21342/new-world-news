@@ -94,18 +94,18 @@ const profiles: Profile[] = [
 
 export function PersonnelRegistry() {
   const [selected, setSelected] = useState<Profile | null>(null)
-  const [unlocked, setUnlocked] = useState<string[]>([])
+  const [unlockedId, setUnlockedId] = useState<string | null>(null)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const open = (profile: Profile) => { setSelected(profile); setPassword(''); setError('') }
+  const open = (profile: Profile) => { setSelected(profile); setUnlockedId(null); setPassword(''); setError('') }
   const verify = (event: React.FormEvent) => {
     event.preventDefault()
     if (!selected) return
-    if (password === '100522') { setUnlocked((ids) => [...new Set([...ids, selected.id])]); setError('') }
+    if (password === '100522') { setUnlockedId(selected.id); setError('') }
     else setError('权限不足，无法查阅')
   }
-  const detailed = selected && (selected.access === 'candidate' || unlocked.includes(selected.id))
+  const detailed = selected && (selected.access === 'candidate' || selected.id === 'mond' || unlockedId === selected.id)
 
   return (
     <section className="personnel-registry" id="personnel-registry">
@@ -114,7 +114,7 @@ export function PersonnelRegistry() {
       <div className="personnel-grid">
         {profiles.map((profile) => (
           <button type="button" className={`personnel-card ${profile.access}`} key={profile.id} onClick={() => open(profile)}>
-            <span className="personnel-card-top"><small>{profile.code}</small>{profile.access === 'high' ? <LockKeyhole size={14} /> : <BadgeCheck size={15} />}</span>
+            <span className="personnel-card-top"><small>{profile.code}</small>{profile.access === 'high' && profile.id !== 'mond' ? <LockKeyhole size={14} /> : <BadgeCheck size={15} />}</span>
             <span className="personnel-avatar"><UserRound size={25} /></span>
             <strong>{profile.name}</strong><span className="personnel-post">{profile.post}</span>
             <span className="personnel-meta">{profile.region} · {profile.caste}</span>
@@ -129,7 +129,7 @@ export function PersonnelRegistry() {
           <div className="personnel-basic"><div><small>现任 / 候选职务</small><strong>{selected.post}</strong></div><div><small>种姓与任命</small><strong>{selected.caste}</strong></div></div>
           <p className="personnel-summary">{selected.summary}</p>
           {detailed ? <div className="personnel-details">
-            <div className="personnel-access-granted"><ShieldCheck size={16} /><span>{selected.access === 'high' ? '二级授权已核验 · 详细履历开放' : '备选人公示档案 · 可自由查阅'}</span></div>
+            <div className="personnel-access-granted"><ShieldCheck size={16} /><span>{selected.id === 'mond' ? '现任签发人档案 · 完整履历开放' : selected.access === 'high' ? '二级授权已核验 · 详细履历开放' : '备选人公示档案 · 可自由查阅'}</span></div>
             <section><span>履历背景 / BACKGROUND</span><p>{selected.background}</p></section>
             <section><span>任职记录 / APPOINTMENT</span><p>{selected.record}</p></section>
             <section><span>组织评估 / ASSESSMENT</span><p>{selected.assessment}</p></section>
