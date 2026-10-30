@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-singlefile
 dist-ssr
 *.local
 data/shares.json

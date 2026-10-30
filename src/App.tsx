@@ -50,13 +50,14 @@ import {
   TopSecretEditorModal,
   TopSecretLockModal,
   TopSecretReaderModal,
-  makeIntelligence,
   normalizeIntelligence,
   type IntelligenceData,
   type TopSecretDocument,
 } from './controller'
 import CitizenStatus from './CitizenStatus'
 import CloudShareControls from './CloudShareControls'
+import { seedArchives, seedTopSecret } from './seedArchives'
+import { seedTicker, seedNewsArticles, seedSituationEvents, seedDataMetrics } from './seedContent'
 import './App.css'
 
 type ImageSettings = {
@@ -68,7 +69,7 @@ type ImageSettings = {
   grayscale: number
 }
 
-type Article = {
+export type Article = {
   id: string
   title: string
   category: string
@@ -81,7 +82,7 @@ type Article = {
   image: ImageSettings
 }
 
-type SiteData = {
+export type SiteData = {
   siteName: string
   englishName: string
   motto: string
@@ -126,10 +127,14 @@ const initialData: SiteData = {
   englishName: 'THE NEW WORLD CHRONICLE',
   motto: '记录秩序，也记录思想',
   issue: 'VOL. 001',
-  ticker: '欢迎进入你的新闻编辑部 —— 点击“编辑模式”开始创作，所有内容将自动保存在本机',
-  articles: [makeArticle(true), makeArticle(), makeArticle(), makeArticle(), makeArticle()],
-  archives: [makeArchive(0), makeArchive(1), makeArchive(2)],
-  intelligence: makeIntelligence(),
+  ticker: seedTicker,
+  articles: seedNewsArticles,
+  archives: seedArchives,
+  intelligence: {
+    events: seedSituationEvents,
+    metrics: seedDataMetrics,
+    topSecret: seedTopSecret,
+  },
 }
 
 function loadData(): SiteData {
@@ -138,17 +143,31 @@ function loadData(): SiteData {
     if (!saved) return initialData
     const parsed = JSON.parse(saved) as SiteData
     if (!Array.isArray(parsed.articles)) return initialData
-    const archives = Array.isArray(parsed.archives) ? parsed.archives : initialData.archives
+    const transferredToTopSecret = ['ws-archive-05', 'ws-archive-07', 'ws-archive-10', 'ws-archive-12', 'ws-archive-70', 'ws-archive-73']
+    const savedArchives = (Array.isArray(parsed.archives) ? parsed.archives : []).filter((archive) => !transferredToTopSecret.includes(archive.id))
+    const savedArchiveIds = new Set(savedArchives.map((archive) => archive.id))
+    const migratedSavedArchives = savedArchives.map((archive) =>
+      archive.id === 'ws-archive-70' && archive.title === '档案 70：世界国最后一次主宰者会议'
+        ? seedArchives.find((seed) => seed.id === archive.id) || archive
+        : archive,
+    )
+    const archives = [...seedArchives.filter((archive) => !savedArchiveIds.has(archive.id)), ...migratedSavedArchives]
+    const intelligence = normalizeIntelligence(parsed.intelligence)
+    if ((!intelligence.topSecret.title && !intelligence.topSecret.body) || intelligence.topSecret.title.startsWith('绝密档案 70：') || (intelligence.topSecret.title === seedTopSecret.title && !intelligence.topSecret.body.includes('绝密封存附件 WS-005'))) intelligence.topSecret = seedTopSecret
     return {
       ...initialData,
       ...parsed,
       articles: parsed.articles.map((article) => ({
         ...makeArticle(),
         ...article,
-        image: { ...blankImage(), ...article.image },
+        image: {
+          ...blankImage(),
+          ...article.image,
+          src: article.image?.src || seedNewsArticles.find((seed) => seed.id === article.id)?.image.src || '',
+        },
       })),
       archives: archives.map((archive, index) => ({ ...makeArchive(index), ...archive })),
-      intelligence: normalizeIntelligence(parsed.intelligence),
+      intelligence,
     }
   } catch {
     return initialData

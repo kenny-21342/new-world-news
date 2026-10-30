@@ -172,8 +172,8 @@ export function ControllerDashboard({
       <section className="top-secret-panel" id="top-secret-document">
         <div className="secret-watermark">X</div>
         <span className="secret-icon"><FileLock2 size={29} /></span>
-        <div><span>ULTRA CLASSIFIED / LEVEL X</span><h2>绝密文档</h2><p>{intelligence.topSecret.title || '一份需要二次身份核验的最高机密文档。'}</p><small><KeyRound size={12} /> 提示口令：作者的生日</small></div>
-        <button type="button" onClick={onOpenTopSecret}><LockKeyhole size={16} /> 输入密码解锁 <ArrowRight size={16} /></button>
+        <div><span>ULTRA CLASSIFIED / LEVEL X</span><h2>绝密档案库</h2><p>6 份封存记录：紧急稳定预案 + 5 份最高风险档案</p><small><KeyRound size={12} /> 往期档案中不可见 · 提示口令：作者的生日</small></div>
+        <button type="button" onClick={onOpenTopSecret}><LockKeyhole size={16} /> 解锁整个档案库 <ArrowRight size={16} /></button>
       </section>
     </div>
   )
