@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -55,6 +55,8 @@ import {
   type TopSecretDocument,
 } from './controller'
 import CitizenStatus from './CitizenStatus'
+import { CasteSelector, casteInfo, type Caste } from './CasteSelector'
+import { CitizenAd } from './CitizenAds'
 import CloudShareControls from './CloudShareControls'
 import { seedArchives, seedTopSecret } from './seedArchives'
 import { seedTicker, seedNewsArticles, seedSituationEvents, seedDataMetrics } from './seedContent'
@@ -180,6 +182,13 @@ function formatDate(date: string) {
   return `${year}.${month}.${day}`
 }
 
+function allocateArticle(article: Article, caste: Caste, isCitizen: boolean): Article {
+  if (!isCitizen || caste === 'alpha' || caste === 'beta') return article
+  if (caste === 'gamma') return { ...article, summary: article.summary.split(/[。！？]/)[0] + '。相关活动与消费积分已按您的岗位配给。' }
+  if (caste === 'delta') return { ...article, summary: '请留意所在编组的班次、交通与配给通知，按时参加集体活动。', body: `${article.title}\n\n本通告已按德尔塔岗位需要简化。请服从编组安排，保持生产节奏，下班后按时领取唆麻。` }
+  return { ...article, title: article.category === '科技' ? '生产设备运行正常' : article.category === '文化' ? '统一娱乐准时开放' : '今日公共生活通知', summary: '工作时间不变。下班后请按时领取唆麻。', body: '工作时间不变。\n\n请参加统一娱乐，保持微笑。\n\n下班后请按时领取唆麻。' }
+}
+
 function NewsImage({
   image,
   className = '',
@@ -218,8 +227,8 @@ function NewsImage({
           <span className="placeholder-corner corner-a" />
           <span className="placeholder-corner corner-b" />
           <ImagePlus size={30} strokeWidth={1.4} />
-          <strong>{editable ? '添加你的新闻图片' : '图片留白'}</strong>
-          <small>建议横向构图 · 可自由调整</small>
+          <strong>{editable ? '添加核准新闻图片' : '图像待核准'}</strong>
+          <small>公共影像处 · 标准横向制式</small>
         </div>
       )}
     </div>
@@ -253,6 +262,7 @@ export default function App() {
   const [editing, setEditing] = useState(role === 'editor')
   const [loginOpen, setLoginOpen] = useState(false)
   const [dark, setDark] = useState(false)
+  const [caste, setCaste] = useState<Caste>('beta')
   const [category, setCategory] = useState('全部')
   const [query, setQuery] = useState('')
   const [searchOpen, setSearchOpen] = useState(false)
@@ -283,20 +293,31 @@ export default function App() {
 
   const isEditor = role === 'editor'
   const canSeeArchives = role !== 'citizen'
-  const featured = data.articles.find((article) => article.featured) || data.articles[0]
-  const readerArticle = data.articles.find((article) => article.id === readerId)
+  const citizenArticles = useMemo(() => role === 'citizen' ? data.articles.slice(0, casteInfo[caste].count) : data.articles, [data.articles, role, caste])
+  const featuredSource = citizenArticles.find((article) => article.featured) || citizenArticles[0]
+  const featured = featuredSource ? allocateArticle(featuredSource, caste, role === 'citizen') : undefined
+  const readerSource = citizenArticles.find((article) => article.id === readerId)
+  const readerArticle = readerSource ? allocateArticle(readerSource, caste, role === 'citizen') : undefined
   const readerArchive = canSeeArchives ? data.archives.find((archive) => archive.id === archiveReaderId) : undefined
   const hasFilter = category !== '全部' || query.trim().length > 0
 
   const visibleArticles = useMemo(() => {
     const keyword = query.trim().toLowerCase()
-    return data.articles.filter((article) => {
+    return citizenArticles.filter((article) => {
       const categoryMatch = category === '全部' || article.category === category
       const searchMatch = !keyword || `${article.title} ${article.summary} ${article.author}`.toLowerCase().includes(keyword)
       const featureMatch = hasFilter || article.id !== featured?.id
       return categoryMatch && searchMatch && featureMatch
-    })
-  }, [data.articles, category, query, hasFilter, featured?.id])
+    }).map((article) => allocateArticle(article, caste, role === 'citizen'))
+  }, [citizenArticles, category, query, hasFilter, featured?.id, caste, role])
+
+  const adPositions: number[] = role !== 'citizen'
+    ? [0, 2, 4, 6, 8, 10, 12, 15]
+    : { epsilon: [0, 1, 2], delta: [0, 2, 4], gamma: [1, 4, 8], beta: [2, 6, 10], alpha: [4, 10, 15] }[caste]
+  const adSlotForIndex = (index: number) => {
+    const position = adPositions.indexOf(index)
+    return position >= 0 ? position : null
+  }
 
   const modalOpen = Boolean(draft || archiveDraft || intelligenceDraft || topSecretDraft || secretLockOpen || secretReaderOpen || settingsOpen || readerArticle || readerArchive || loginOpen)
 
@@ -640,7 +661,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="page-width main-content">
+      <main className={`page-width main-content ${role === 'citizen' ? `caste-${caste}` : ''}`}>
         <section className="edition-bar">
           <div>
             <span className="section-kicker">{role === 'controller' ? 'WORLD STATE CENTRAL ARCHIVE' : 'YOUR INDEPENDENT NEWSROOM'}</span>
@@ -668,7 +689,7 @@ export default function App() {
           </div>
         </section>
 
-        {role === 'citizen' && <CitizenStatus />}
+        {role === 'citizen' && <><CitizenStatus /><CasteSelector caste={caste} onChange={(next) => { setCaste(next); setCategory('全部'); setReaderId(null) }} /></>}
 
         {isEditor && editing && (
           <div className="edit-notice"><Sparkles size={17} /><span><strong>编辑者权限已开启。</strong> 点击任意新闻框架填写内容；向下可管理真实档案。</span><button type="button" onClick={() => setEditing(false)}>预览编辑结果 <ArrowRight size={15} /></button></div>
@@ -698,10 +719,10 @@ export default function App() {
             <aside className="news-wire">
               <div className="wire-heading">
                 <div><span className="section-kicker">LATEST DISPATCHES</span><h2>新闻速报</h2></div>
-                <span className="wire-count">{String(Math.max(data.articles.length - 1, 0)).padStart(2, '0')}</span>
+                <span className="wire-count">{String(Math.max(citizenArticles.length - 1, 0)).padStart(2, '0')}</span>
               </div>
               <div className="wire-list">
-                {data.articles.filter((article) => article.id !== featured.id).slice(0, 4).map((article, index) => (
+                {citizenArticles.filter((article) => article.id !== featured.id).slice(0, 4).map((article, index) => (
                   <button type="button" className="wire-item" key={article.id} onClick={() => openArticle(article)}>
                     <span className="wire-number">{String(index + 1).padStart(2, '0')}</span>
                     <span className="wire-copy">
@@ -715,7 +736,7 @@ export default function App() {
               {isEditor && <button type="button" className="wire-add" onClick={addArticle}><Plus size={16} /> 添加一条新闻</button>}
               <div className="wire-note">
                 <Clock3 size={18} />
-                <div><strong>{isEditor ? '你的报纸，由你定义' : '世界国公共新闻服务'}</strong><p>{isEditor ? '文字与图片只保存在当前浏览器，不会上传。' : '当前为世界公民公开浏览界面。'}</p></div>
+                <div><strong>{isEditor ? '中央新闻内容维护' : '世界国公共新闻服务'}</strong><p>{isEditor ? '授权文稿保存于本机内网终端，请定期归档备份。' : '当前为世界公民公共信息层级。'}</p></div>
               </div>
             </aside>
           </section>
@@ -736,23 +757,26 @@ export default function App() {
           {visibleArticles.length ? (
             <div className="news-grid">
               {visibleArticles.map((article, index) => (
-                <article className={`news-card ${editing ? 'editable-frame' : ''}`} key={article.id} onClick={() => openArticle(article)}>
-                  <div className="card-image-wrap">
-                    <NewsImage image={article.image} className="card-image" editable={editing} />
-                    <span className="card-index">{String(index + 1).padStart(2, '0')}</span>
-                    {article.featured && <span className="featured-badge">头条</span>}
-                  </div>
-                  <div className="card-copy">
-                    <div className="story-meta"><span>{article.category}</span><span>{formatDate(article.date)}</span></div>
-                    <h3 className={!article.title ? 'placeholder-text' : ''}>{article.title || '点击填写新闻标题'}</h3>
-                    <p className={!article.summary ? 'placeholder-text' : ''}>{article.summary || '用一两句话写下这条新闻的摘要，吸引读者继续阅读。'}</p>
-                    <div className="card-footer">
-                      <span>{article.author || '作者待填写'}</span>
-                      <button type="button" aria-label={editing ? '编辑新闻' : '阅读新闻'}>{editing ? <Edit3 size={16} /> : <ArrowRight size={17} />}</button>
+                <Fragment key={article.id}>
+                  <article className={`news-card ${editing ? 'editable-frame' : ''}`} onClick={() => openArticle(article)}>
+                    <div className="card-image-wrap">
+                      <NewsImage image={article.image} className="card-image" editable={editing} />
+                      <span className="card-index">{String(index + 1).padStart(2, '0')}</span>
+                      {article.featured && <span className="featured-badge">头条</span>}
                     </div>
-                  </div>
-                  {editing && <span className="frame-edit-badge"><Edit3 size={13} /> 点击编辑</span>}
-                </article>
+                    <div className="card-copy">
+                      <div className="story-meta"><span>{article.category}</span><span>{formatDate(article.date)}</span></div>
+                      <h3 className={!article.title ? 'placeholder-text' : ''}>{article.title || '点击填写新闻标题'}</h3>
+                      <p className={!article.summary ? 'placeholder-text' : ''}>{article.summary || '用一两句话写下这条新闻的摘要，吸引读者继续阅读。'}</p>
+                      <div className="card-footer">
+                        <span>{article.author || '作者待填写'}</span>
+                        <button type="button" aria-label={editing ? '编辑新闻' : '阅读新闻'}>{editing ? <Edit3 size={16} /> : <ArrowRight size={17} />}</button>
+                      </div>
+                    </div>
+                    {editing && <span className="frame-edit-badge"><Edit3 size={13} /> 点击编辑</span>}
+                  </article>
+                  {!editing && adSlotForIndex(index) !== null && <CitizenAd slot={adSlotForIndex(index)!} />}
+                </Fragment>
               ))}
               {editing && (
                 <button type="button" className="empty-add-card" onClick={addArticle}>
@@ -778,8 +802,8 @@ export default function App() {
 
         <section className="manifesto-banner">
           <span className="manifesto-symbol">“</span>
-          <div><span className="section-kicker">A SPACE FOR YOUR IDEAS</span><h2>{isEditor ? '每一块留白，都在等待一个观点。' : '今日的新闻，明日的幸福。'}</h2></div>
-          {isEditor && <button type="button" onClick={addArticle}>开始创作 <ArrowRight size={18} /></button>}
+          <div><span className="section-kicker">COMMUNITY · IDENTITY · STABILITY</span><h2>{isEditor ? '每一条核准的信息，都在维护共同的幸福。' : '今日的新闻，明日的幸福。'}</h2></div>
+          {isEditor && <button type="button" onClick={addArticle}>拟写公共通告 <ArrowRight size={18} /></button>}
         </section>
           </>
         )}
@@ -788,7 +812,7 @@ export default function App() {
       <footer className="site-footer">
         <div className="page-width footer-inner">
           <div className="footer-brand"><Newspaper size={25} /><strong>{data.siteName}</strong><span>© 新世界新闻编辑部</span></div>
-          <p>为《美丽新世界》创意作业而设 · 所有新闻内容均由你创作</p>
+          <p>世界国中央新闻总署核准 · 共同体、身份、稳定</p>
           <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>回到顶部 <ArrowUpFromLine size={15} /></button>
         </div>
       </footer>

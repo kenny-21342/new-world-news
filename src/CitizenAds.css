@@ -1,0 +1,43 @@
+.ad-product{width:min(38%,340px);height:210px;position:relative;flex:none;transform:rotate(1.5deg);box-shadow:0 16px 30px rgba(0,0,0,.2);background:#eee}.ad-product img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.82) contrast(1.03)}.ad-product span{position:absolute;left:0;bottom:0;padding:6px 10px;background:rgba(20,30,25,.82);color:#fff;font-size:8px;letter-spacing:.1em}.ad-watch{color:#eee8dc;background:linear-gradient(120deg,#40392f,#75654c)}.ad-shoes{color:#f0e9e5;background:linear-gradient(120deg,#5a302d,#915149)}.ad-sofa{color:#eee8f1;background:linear-gradient(120deg,#45445f,#79728c)}.ad-mug{color:#263b38;background:linear-gradient(120deg,#d7e1d7,#9bbcb0)}.ad-cookie{color:#4c3325;background:linear-gradient(120deg,#f0d5b5,#dca873)}
+.citizen-ad {
+  position: relative;
+  grid-column: 1 / -1;
+  overflow: hidden;
+  margin: 8px 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 30px rgba(34, 42, 34, 0.08);
+}
+.ad-topline, .ad-footer { display: flex; align-items: center; gap: 18px; padding: 11px 22px; font-size: 9px; letter-spacing: .06em; }
+.ad-topline { justify-content: space-between; border-bottom: 1px solid currentColor; }
+.ad-topline > span, .ad-footer > span, .ad-footer a { display: inline-flex; align-items: center; gap: 6px; }
+.ad-topline small { padding: 2px 6px; border: 1px solid currentColor; font-size: 8px; }
+.ad-body { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 225px; gap: 30px; padding: 30px 38px; }
+.ad-copy { position: relative; z-index: 1; max-width: 720px; }
+.ad-kicker { font: 700 9px Georgia, serif; letter-spacing: .16em; }
+.ad-copy h3 { margin: 13px 0 12px; white-space: pre-line; font: 600 clamp(25px, 3.2vw, 42px)/1.25 "Noto Serif SC", "Songti SC", serif; letter-spacing: .02em; }
+.ad-copy p { max-width: 590px; margin: 0 0 14px; font-size: 12px; line-height: 1.8; }
+.ad-copy > small { font-size: 9px; letter-spacing: .08em; opacity: .72; }
+.ad-symbol { position: relative; z-index: 1; min-width: 170px; text-align: center; font: 700 86px/1 Georgia, serif; letter-spacing: -.08em; opacity: .78; transform: rotate(-5deg); }
+.ad-footer { justify-content: flex-start; border-top: 1px solid currentColor; }
+.ad-footer a { margin-left: auto; padding: 8px 13px; color: inherit; font-weight: 700; text-decoration: none; border: 1px solid currentColor; transition: transform .2s, background .2s; }
+.ad-footer a:hover { transform: translateY(-2px); background: rgba(255,255,255,.14); }
+.ad-sparkle { position: absolute; right: 24px; top: 54px; opacity: .45; }
+.ad-soma { color: #eff8dc; background: linear-gradient(115deg, #075c4c, #0c7961 70%, #a4c94b 140%); }
+.ad-soma .ad-symbol { color: #d7f786; text-shadow: 8px 8px 0 rgba(0,0,0,.12); }
+.ad-nuts { color: #4b2c17; background: linear-gradient(110deg, #f2d998, #f6e8c5 58%, #d9a354); }
+.ad-nuts .ad-body { background-image: radial-gradient(circle at 85% 20%, rgba(255,255,255,.6) 0 4px, transparent 5px), radial-gradient(circle at 75% 80%, rgba(98,53,18,.13) 0 6px, transparent 7px); background-size: 38px 38px, 55px 55px; }
+.ad-nuts .ad-symbol { color: #8c4d20; font-size: 74px; }
+.ad-sleep { color: #e7e9fa; background: linear-gradient(125deg, #171e42, #33366a 65%, #67699a); }
+.ad-sleep .ad-body::after { content: ""; position: absolute; right: 70px; top: 20px; width: 180px; height: 180px; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; box-shadow: 0 0 0 25px rgba(255,255,255,.025), 0 0 0 50px rgba(255,255,255,.02); }
+.ad-sleep .ad-symbol { color: #cbd0ff; font-size: 67px; }
+.ad-wardrobe { color: #22271f; background: linear-gradient(105deg, #d7ed8b, #edf2d5 58%, #b9cf75); }
+.ad-wardrobe .ad-symbol { min-width: 250px; color: #354c31; font-size: 54px; letter-spacing: .04em; }
+.night .citizen-ad { box-shadow: 0 14px 35px rgba(0,0,0,.25); }
+@media (max-width: 680px) {
+  .ad-body { min-height: 260px; padding: 25px 22px; }
+  .ad-symbol { position: absolute; right: 8px; bottom: 18px; min-width: 100px; font-size: 55px; opacity: .16; }
+  .ad-wardrobe .ad-symbol { min-width: 120px; font-size: 40px; }
+  .ad-copy h3 { font-size: 28px; }
+  .ad-footer { flex-wrap: wrap; gap: 10px 15px; padding: 12px 18px; }
+  .ad-footer a { width: 100%; justify-content: center; margin: 3px 0 0; }
+}

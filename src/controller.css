@@ -1139,15 +1139,25 @@
 }
 
 @media (max-width: 520px) {
-  .intelligence-chart-card {
-    padding: 19px 13px 15px;
-  }
-
-  .intelligence-chart {
-    height: 235px;
-  }
-
-  .chart-card-heading h3 {
-    font-size: 15px;
-  }
+  .intelligence-chart-card { padding: 19px 13px 15px; }
+  .intelligence-chart { height: 235px; }
+  .chart-card-heading h3 { font-size: 15px; }
 }
+
+/* 主宰者内网：靛蓝、石墨与行政紫 */
+.controller-dashboard{--controller-accent:#66638e;--controller-gold:#c4a873}
+.controller-hero{background:linear-gradient(120deg,#20263b,#30354d 65%,#3d3b54);border-top:3px solid #b99b68}
+.controller-clearance{background:rgba(151,145,190,.12);border-color:rgba(195,181,220,.3)}
+.controller-anchor-nav{background:#292e42;border-color:#454a60}
+.controller-anchor-nav button:hover{background:#3b4058;color:#eee9dd}
+.controller-anchor-nav .secret-anchor{background:#583f55;color:#eadce7}
+.intelligence-section,.metric-card,.intelligence-chart-card{border-color:#d3cfda;background:#f3f0f4}
+.intelligence-heading{border-color:#55516f}.intelligence-heading>svg{color:#6b638b}
+.metric-card{border-top-color:#6b638b}.metric-card>strong{color:#3c3856}
+.personnel-registry,.mond-office{filter:saturate(.88)}
+.controller-dashboard .office-banner{background:linear-gradient(115deg,#292c43,#41405b);border-top-color:#bca374}
+.controller-dashboard .officials-heading{border-color:#56516e}
+.controller-dashboard .official-card:hover{border-color:#6d648d}
+.controller-dashboard .personnel-card.high{border-top-color:#6d648d}
+.controller-dashboard .personnel-heading>svg{color:#6d648d}
+

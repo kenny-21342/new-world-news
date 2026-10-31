@@ -2104,11 +2104,23 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+  *,*::before,*::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* 公共频道首屏：头条在一次浏览中完整呈送 */
+@media (min-width: 901px) {
+  .lead-layout { grid-template-columns:minmax(0,1.75fr) minmax(280px,.8fr);gap:30px;padding:22px 0 30px; }
+  .lead-story { display:grid;grid-template-columns:minmax(0,1.12fr) minmax(270px,.88fr);grid-template-rows:auto 1fr;column-gap:24px;padding:18px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(255,255,255,.32),transparent);box-shadow:0 14px 38px rgba(32,45,35,.07); }
+  .lead-story .story-label { grid-column:1/-1; }
+  .lead-image { aspect-ratio:auto;height:clamp(245px,31vh,325px); }
+  .lead-copy { display:flex;flex-direction:column;justify-content:center;padding:0; }
+  .lead-copy h1 { font-size:clamp(28px,3vw,43px);line-height:1.16;margin:12px 0; }
+  .lead-copy > p { font-size:13px;line-height:1.75;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden; }
+  .news-wire { max-height:390px; }
+  .wire-item { padding:12px 0; }
+}
+.news-card { transition:transform .22s ease,box-shadow .22s ease; }
+.news-card:hover { transform:translateY(-4px);box-shadow:0 14px 35px rgba(31,43,34,.09); }
+.news-section { padding-top:30px; }
+@media(max-width:900px){.lead-image{max-height:300px}.lead-copy h1{font-size:32px}}
+

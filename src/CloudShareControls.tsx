@@ -85,7 +85,7 @@ export default function CloudShareControls({ data }: { data: SharedSiteData }) {
             <div className="cloud-share-body">
               <div className="cloud-share-intro">
                 <span><Share2 size={25} /></span>
-                <div><strong>{shareId ? '更新公开分享版本' : '发布你的新闻官网'}</strong><p>{shareId ? '再次发布会更新同一个链接，访客无需重新获取地址。' : '保存当前公开新闻，并生成任何人都能打开的只读链接。'}</p></div>
+                <div><strong>{shareId ? '更新公共频道版本' : '发布公共新闻频道'}</strong><p>{shareId ? '再次发布会更新同一个链接，访客无需重新获取地址。' : '保存当前公开新闻，并生成任何人都能打开的只读链接。'}</p></div>
               </div>
               <div className="cloud-share-safety"><ShieldCheck size={17} /><p>只分享站名与公开新闻。<strong>真实档案、形势数据、绝密文档不会被公开。</strong></p></div>
               {shareUrl && (
@@ -99,7 +99,7 @@ export default function CloudShareControls({ data }: { data: SharedSiteData }) {
               <p className="cloud-share-note">链接使用当前网站域名。部署到互联网后，同一功能会生成真正的公开网址。</p>
             </div>
             <footer className="modal-footer">
-              <span className="cloud-share-readonly">访客只能阅读，不能修改你的内容</span>
+              <span className="cloud-share-readonly">公共终端仅限阅读，不具备内容维护权限</span>
               <div>
                 {shareUrl && <button type="button" className="cancel-button" onClick={() => window.open(shareUrl, '_blank', 'noopener,noreferrer')}><ExternalLink size={15} /> 打开分享页</button>}
                 <button type="button" className="save-button" onClick={publish} disabled={publishing}>
